@@ -19,6 +19,7 @@ module.exports = function(grunt) {
         },
         exec: {
             tsc: './node_modules/typescript/bin/tsc',
+            mocha: './node_modules/mocha/bin/mocha',
             webpack: './node_modules/.bin/webpack'
         },
         tslint: {
