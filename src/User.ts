@@ -1,7 +1,7 @@
 /**
  * @author: William Hayward
  */
-import { Person } from './Person';
-export class User extends Person {
-
+import { EventManager } from './EventManager';
+export class User extends EventManager {
+    
 }
