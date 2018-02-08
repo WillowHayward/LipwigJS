@@ -28,6 +28,13 @@ export abstract class SocketUser extends EventManager {
         });
     }
 
+    public sendMessage(message: Message): void {
+        //TODO: Add in contingency system for messages sent during a disconnection
+        //CONT: A queue of messages to be sent in bulk on resumption of connection
+        message.sender = this.id;
+        this.socket.send(message);
+    }
+
     protected setID(message: Message): boolean {
         this.id = message.data[0];
         delete this.reserved[message.event]; // Only happens once
@@ -35,14 +42,7 @@ export abstract class SocketUser extends EventManager {
         return true;
     }
 
-    protected send(message: Message): void {
-        //TODO: Add in contingency system for messages sent during a disconnection
-        //CONT: A queue of messages to be sent in bulk on resumption of connection
-        message.sender = this.id;
-        this.socket.send(message);
-    }
-
-    private handle(event: MessageEvent): void {
+    protected handle(event: MessageEvent): void {
         const message: Message = JSON.parse(event.data);
         if (message.event in this.reserved) {
             if (!this.reserved[message.event](message)) {

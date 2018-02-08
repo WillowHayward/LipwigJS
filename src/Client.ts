@@ -9,4 +9,14 @@ export class Client extends SocketUser {
         super(url);
         this.reserved.created = this.setID;
     }
+
+    public send(event: string, ...args: any[]): void { // tslint:disable-line:no-any
+        const message: Message = {
+            event: event,
+            data: args,
+            sender: this.id,
+            recipient: []
+        };
+        this.sendMessage(message);
+    }
 }
