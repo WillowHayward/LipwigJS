@@ -52,6 +52,7 @@ export class Host extends SocketUser {
     private joined(message: Message): boolean {
         const userID: string = message.data[0];
         const user: User = new User(userID, this);
+        this.users[userID] = user;
         this.emit('joined', user, message);
 
         return false; // Block second emit

@@ -8,7 +8,7 @@ type FunctionMap = {
 };
 
 export abstract class SocketUser extends EventManager {
-    protected id: string;
+    public id: string;
     private reserved: FunctionMap;
     private socket: WebSocket;
     constructor(url: string) {
@@ -34,7 +34,9 @@ export abstract class SocketUser extends EventManager {
     public sendMessage(message: Message): void {
         //TODO: Add in contingency system for messages sent during a disconnection
         //CONT: A queue of messages to be sent in bulk on resumption of connection
-        message.sender = this.id;
+        if (message.sender.length === 0) {
+            message.sender = this.id;
+        }
         this.socket.send(JSON.stringify(message));
     }
 

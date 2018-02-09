@@ -18,7 +18,7 @@ export class User extends EventManager {
         const message: Message = {
             event: event,
             data: args,
-            sender: '',
+            sender: this.parent.id,
             recipient: [this.id]
         };
         this.parent.sendMessage(message);
