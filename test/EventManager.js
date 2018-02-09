@@ -190,4 +190,53 @@ describe('EventManager', function() {
             assert.equal(count, 4);
         })
     });
+    describe('#clear()', function() {
+        it('should clear event listeners', function() {
+            manager.on('add', function() {
+                count++;
+            });
+            manager.emit('add');
+            manager.clear('add');
+            manager.emit('add');
+            assert.equal(count, 1);
+        });
+
+        it('should only clear specified event listener', function() {
+            manager.on('add', function() {
+                count++;
+            });
+            manager.on('double', function() {
+                count *= 2;
+            });
+            manager.emit('add');
+            manager.emit('double');
+            manager.clear('add');
+            manager.emit('add');
+            manager.emit('double');
+            assert.equal(count, 4);
+
+        });
+
+        it('should clear all events from listener', function() {
+            manager.on('add', function() {
+                count++;
+            });
+            manager.on('add', function() {
+                count += 2;
+            });
+            manager.emit('add');
+            manager.clear('add');
+            manager.emit('add');
+            assert.equal(count, 3);
+        });
+
+        it('should clear once() listeners', function() {
+            manager.once('add', function() {
+                count++;
+            });
+            manager.clear('add');
+            manager.emit('add');
+            assert.equal(count, 0);
+        })
+    })
   });
