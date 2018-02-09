@@ -94,4 +94,7 @@ describe('Lipwig', function () {
         });
     });
   
+    it('should allow for multiple, independent rooms', function(done) {
+        // TODO: Implement this
+    });
   });
