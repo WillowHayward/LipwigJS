@@ -51,7 +51,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
+    // Lipwig server
+    grunt.registerTask('lipwig', function() {
+        const Lipwig = require('lipwig');
+        lipwig = new Lipwig();
+    });
     // Default task(s).
-    grunt.registerTask('build', ['tslint', 'exec', 'clean:build', 'uglify'])
+    grunt.registerTask('build', ['tslint', 'lipwig', 'exec', 'clean:build', 'uglify'])
     grunt.registerTask('default', ['build']);
   };
