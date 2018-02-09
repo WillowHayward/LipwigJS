@@ -41,6 +41,10 @@ export class EventManager {
         });
     }
 
+    public clear(event: string): void {
+        delete this.events[event];
+    }
+
     private addEvent(event: string, fn: Function, context: object, once: boolean): void {
         if (this.events[event] === undefined) {
             this.events[event] = [];
