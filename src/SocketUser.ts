@@ -9,7 +9,7 @@ type FunctionMap = {
 
 export abstract class SocketUser extends EventManager {
     public id: string;
-    private reserved: FunctionMap;
+    protected reserved: FunctionMap;
     private socket: WebSocket;
     constructor(url: string) {
         super();
@@ -47,17 +47,7 @@ export abstract class SocketUser extends EventManager {
         return true;
     }
 
-    protected handle(event: MessageEvent): void {
-        const message: Message = JSON.parse(event.data);
-        if (message.event in this.reserved) {
-            if (!this.reserved[message.event](message)) {
-                return;
-            }
-        }
-        const args: any[] = [message.event].concat(message.data); // tslint:disable-line:no-any
-        args.push(message);
-        this.emit.apply(this, args);
-    }
+    protected abstract handle(event: MessageEvent): void;
 
     protected reserve(event: string, callback: Function): void {
         this.reserved[event] = callback.bind(this);

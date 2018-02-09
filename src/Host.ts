@@ -20,13 +20,20 @@ export class Host extends SocketUser {
     }
 
     protected handle(event: MessageEvent): void {
-        super.handle(event);
         const message: Message = JSON.parse(event.data);
+        if (message.event in this.reserved) {
+            if (!this.reserved[message.event](message)) {
+                return;
+            }
+        }
+
         if (message.sender in this.users) {
             const user: User = this.users[message.sender];
             const args: any[] = [message.event].concat(message.data); // tslint:disable-line:no-any
             args.push(message);
             user.emit.apply(user, args);
+            args.splice(1, 0, user);
+            this.emit.apply(this, args);
         }
     }
 

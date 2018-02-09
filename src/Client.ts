@@ -31,4 +31,16 @@ export class Client extends SocketUser {
         };
         this.sendMessage(message);
     }
+
+    protected handle(event: MessageEvent): void {
+        const message: Message = JSON.parse(event.data);
+        if (message.event in this.reserved) {
+            if (!this.reserved[message.event](message)) {
+                return;
+            }
+        }
+        const args: any[] = [message.event].concat(message.data); // tslint:disable-line:no-any
+        args.push(message);
+        this.emit.apply(this, args);
+    }
 }
