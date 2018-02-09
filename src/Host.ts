@@ -13,8 +13,8 @@ export class Host extends SocketUser {
     private users: UserMap;
     constructor(url: string, options: object = {}) {
         super(url);
-        this.reserved.created = this.setID;
-        this.reserved.joined = this.joined;
+        this.reserve('created', this.created);
+        this.reserve('joined', this.joined);
 
         this.users = {};
     }
@@ -28,6 +28,25 @@ export class Host extends SocketUser {
             args.push(message);
             user.emit.apply(user, args);
         }
+    }
+
+    protected connected(): void {
+        const message: Message = {
+            event: 'create',
+            data: [],
+            sender: '',
+            recipient: []
+        };
+        this.sendMessage(message);
+    }
+
+    private created(message: Message): boolean {
+        this.setID(message); // Also deleted reserved event
+
+        const id: string = message.data[0];
+        this.emit('created', id);
+
+        return false;
     }
 
     private joined(message: Message): boolean {
