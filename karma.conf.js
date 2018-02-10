@@ -15,7 +15,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'dist/lipwig.min.js',
+      'dist/lipwig.js',
       'test/browser/*.js'
     ],
 
