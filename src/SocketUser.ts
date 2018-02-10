@@ -11,24 +11,28 @@ export abstract class SocketUser extends EventManager {
     public id: string;
     protected reserved: FunctionMap;
     private socket: WebSocket;
+    private retry: boolean;
+    private url: string;
     constructor(url: string) {
         super();
         this.id = '';
         this.reserved = {};
         this.socket = new WebSocket(url);
-        this.socket.addEventListener('open', () => {
-            this.emit('connected');
-            this.connected();
-        });
-        this.socket.addEventListener('error', () => {
-            // TODO: error handling
-        });
-        this.socket.addEventListener('message', (event: MessageEvent) => {
-            this.handle(event);
-        });
-        this.socket.addEventListener('close', () => {
-            // TODO: Connection close handling
-        });
+        this.retry = true;
+        this.url = url;
+        this.addListeners();
+    }
+
+    public reconnect(socket: WebSocket): void {
+        this.socket = socket;
+        this.addListeners();
+        const message: Message = {
+            event: 'reconnect',
+            data: [this.id],
+            sender: this.id,
+            recipient: []
+        };
+        this.sendMessage(message);
     }
 
     public sendMessage(message: Message): void {
@@ -58,4 +62,35 @@ export abstract class SocketUser extends EventManager {
     }
 
     protected abstract connected(): void;
+
+    private addListeners(): void {
+        this.socket.addEventListener('open', () => {
+            this.emit('connected');
+            this.connected();
+        });
+        this.socket.addEventListener('error', () => {
+            // TODO: error handling
+        });
+        this.socket.addEventListener('message', (event: MessageEvent) => {
+            this.handle(event);
+        });
+        this.socket.addEventListener('close', () => {
+            if (this.retry) {
+                this.autoReconnect();
+            }
+            // TODO: Connection close handling
+        });
+    }
+
+    private autoReconnect(): void {
+        const socket: WebSocket = new WebSocket(this.url);
+
+        socket.addEventListener('error', (): void => {
+            setTimeout(this.autoReconnect, 1000);
+        });
+
+        socket.addEventListener('open', (): void => {
+            this.reconnect(socket);
+        });
+    }
 }

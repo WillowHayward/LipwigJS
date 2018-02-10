@@ -21,7 +21,7 @@
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-mocha": "^1.3.0",
-    "lipwig": "^0.3.4",
+    "lipwig": "^0.4.2",
     "mocha": "^5.0.0",
     "tslint": "^5.9.1",
     "tslint-microsoft-contrib": "^5.0.2",

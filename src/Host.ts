@@ -15,6 +15,11 @@ export class Host extends SocketUser {
         super(url);
         this.reserve('created', this.created);
         this.reserve('joined', this.joined);
+        this.reserve('reconnected', (): boolean => {
+            this.emit('reconnected');
+
+            return false;
+        });
 
         this.users = {};
     }
