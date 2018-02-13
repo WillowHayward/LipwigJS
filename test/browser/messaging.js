@@ -1,4 +1,4 @@
-describe('Lipwig', function () {
+describe('Messaging', function () {
     it('should allow for rooms to be created', function(done) {
         const host = Lipwig.create('ws://localhost:8080');
         host.on('created', function() {
