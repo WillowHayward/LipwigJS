@@ -16,6 +16,23 @@ describe('Messaging', function () {
         });
     });
 
+    it('should allow for rooms to be created using http/https masking', function(done) {
+        const host = Lipwig.create('https://localhost:8080');
+        host.on('created', function() {
+            done();
+        })
+    });
+
+    it('should allow for rooms to be joined using http/https masking', function(done) {
+        const host = Lipwig.create('http://localhost:8080');
+        host.on('created', function(code) {
+            const client = Lipwig.join('https://localhost:8080', code);
+            client.on('joined', function() {
+                done();
+            })
+        });
+    });
+
     it('should allow for messages to be sent from the host to an arbitrary user', function(done) {
         const host = Lipwig.create('ws://localhost:8080');
         host.on('created', function(code) {
