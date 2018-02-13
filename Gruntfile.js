@@ -41,6 +41,17 @@ module.exports = function(grunt) {
                 files: ['src/*.ts'],
                 tasks: ['build']
             }
+        }, 
+        typedoc: {
+            build: {
+                options: {
+                    module: 'commonjs',
+                    target: 'es5',
+                    out: 'docs/',
+                    name: 'LipwigJS'
+                },
+                src: 'src/**/*'
+            }
         }
     });
 
@@ -64,6 +75,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-tslint');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-typedoc');
 
     // Lipwig server
     grunt.registerTask('lipwigStart', function() {

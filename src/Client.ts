@@ -12,6 +12,11 @@ export class Client extends SocketUser {
         this.code = code;
     }
 
+    /**
+     * Send a message to the host
+     * @param event The event to send
+     * @param args Arguments to send
+     */
     public send(event: string, ...args: any[]): void { // tslint:disable-line:no-any
         const message: Message = {
             event: event,
