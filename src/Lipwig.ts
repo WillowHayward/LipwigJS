@@ -1,4 +1,5 @@
 /**
+ * Primary class to initate interaction with a LipwigCore server
  * @author: William Hayward
  */
 import { Client } from './Client';
