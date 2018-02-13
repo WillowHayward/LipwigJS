@@ -24,6 +24,17 @@ export class Host extends SocketUser {
         this.users = {};
     }
 
+    public close(reason: string): void {
+        const message: Message = {
+            event: 'close',
+            data: [this.id, reason],
+            recipient: [],
+            sender: this.id
+        };
+
+        this.sendMessage(message);
+    }
+
     protected handle(event: MessageEvent): void {
         const message: Message = JSON.parse(event.data);
         if (message.event in this.reserved) {
@@ -32,14 +43,14 @@ export class Host extends SocketUser {
             }
         }
 
+        const args: any[] = [message.event].concat(message.data); // tslint:disable-line:no-any
         if (message.sender in this.users) {
             const user: User = this.users[message.sender];
-            const args: any[] = [message.event].concat(message.data); // tslint:disable-line:no-any
             args.push(message);
             user.emit.apply(user, args);
             args.splice(1, 0, user);
-            this.emit.apply(this, args);
         }
+        this.emit.apply(this, args);
     }
 
     protected connected(): void {
