@@ -23,4 +23,8 @@ export class User extends EventManager {
         };
         this.parent.sendMessage(message);
     }
+
+    public kick(reason: string = ''): void {
+        this.send('kick', this.id, reason);
+    }
 }

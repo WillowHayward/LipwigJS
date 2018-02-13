@@ -27,7 +27,7 @@ export class Host extends SocketUser {
     public close(reason: string): void {
         const message: Message = {
             event: 'close',
-            data: [this.id, reason],
+            data: [reason],
             recipient: [],
             sender: this.id
         };
