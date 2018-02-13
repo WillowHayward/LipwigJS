@@ -17,9 +17,11 @@ export abstract class SocketUser extends EventManager {
         super();
         this.id = '';
         this.reserved = {};
-        this.socket = new WebSocket(url);
+
+        const cleanUrl: string = url.replace(/https?:\/\//, 'ws://');
+        this.socket = new WebSocket(cleanUrl);
         this.retry = true;
-        this.url = url;
+        this.url = cleanUrl;
         this.addListeners();
     }
 
