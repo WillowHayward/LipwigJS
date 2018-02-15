@@ -3,7 +3,7 @@
         <title>
             Lipwig Chat Example
         </title>
-        <script src="../dist/lipwig.min.js"></script>
+        <script src="lipwig.min.js"></script>
         <script src="chat.js" defer></script>
     </head>
     <style>
@@ -13,23 +13,21 @@
     </style>
     <body>
         <div id="portal">
-            Server: <input type="text" value="http://localhost:8080"/><br/>
-            Mode<br/>
-            <input type="radio" id="rdCreate"/>
-            <label for="rdCreate">Create Room</label><br/>
-            <input type="radio" id="rdJoin"/>
-            <label for="rdJoin">Join Room</label><br/>
+            <input type="button" id="btnCreate" value="Create Room"/><br/>
+            Room Code:<input type="text" id="txtCode"/><br/>
+            <input type="button" id="btnJoin" value="Join Room"/><br/>
+        </div>
+        <div id="connecting" class="hide">
+            Connecting, please wait.
+        </div>
+        <div id="chat" class="hide">
+            Room Code: <span id="codeDisplay"></span>
+            <p>
+                <div id="history">
 
-            <div id="portalCreate" class="hide">
-                Password (blank for none): <input type="text" id="txtCreatePassword"/><br/>
-                <input type-"button" id="btnCreate" value="Create Room"/>
-            </div>
-            <div id="portalJoin" class="hide">
-                Code: <input type="text" id="txtCode"/><br/>
-                Username: <input type="text" id="txtUsername"/><br/>
-                Password (blank for none): <input type="text" id="txtCreatePassword"/><br/>
-                <input type-"button" id="btnCreate" value="Create Room"/>
-            </div>
+                </div>
+            </p>
+            <input type="text" id="txtChat"/><input type="button" id="btnSend" value="Send"/>
         </div>
     </body>
 </html>
