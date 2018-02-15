@@ -24,6 +24,10 @@ export class Host extends SocketUser {
         this.users = {};
     }
 
+    public getUsers(): UserMap {
+        return this.users; // TODO: This is returning a reference to the original object
+    }
+
     public close(reason: string): void {
         const message: Message = {
             event: 'close',

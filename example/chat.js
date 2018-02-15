@@ -9,7 +9,6 @@ const url = 'ws://localhost:8080';
 
 let host;
 let client;
-let users = [];
 document.getElementById('btnCreate').onclick = function() {
     showPage('connecting');
     host = Lipwig.create(url);
@@ -19,7 +18,6 @@ document.getElementById('btnCreate').onclick = function() {
     });
 
     host.on('joined', function(user) {
-        users.push(user);
         display(user.id + ' joined!');
         broadcast(user.id + " joined!", host);
         user.on('message', function(message) {
@@ -31,7 +29,7 @@ document.getElementById('btnCreate').onclick = function() {
     document.getElementById('btnSend').onclick = function() {
         const message = document.getElementById('txtChat').value;
         display(host.id + ': ' + message);
-        broadcast(message, host);
+        broadcast(host.id + ': ' + message, host);
         document.getElementById('txtChat').value = '';
     }
 };
@@ -46,8 +44,8 @@ document.getElementById('btnJoin').onclick = function() {
         showPage('chat');
     });
 
-    client.on('message', function(message, id) {
-        display(id + ': ' + message);
+    client.on('message', function(message) {
+        display(message);
     });
 
     client.on('error', function(error) {
@@ -67,11 +65,14 @@ document.getElementById('btnJoin').onclick = function() {
 }
 
 function broadcast(message, origin) {
-    users.forEach(function(user) {
+    const users = host.getUsers();
+    const userIDs = Object.keys(users);
+    userIDs.forEach(function(id) {
+        const user = users[id];
         if (user === origin) {
             return;
         }
-        user.send('message', message, origin.id);
+        user.send('message', message);
     });
 }
 
