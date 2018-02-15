@@ -52,6 +52,16 @@ module.exports = function(grunt) {
                 },
                 src: 'src/**/*'
             }
+        },
+        connect: {
+            server: {
+                options: {
+                    port: 8000,
+                    hostname: '*',
+                    base: ['./dist/', './example/'],
+                    keepalive: true
+                }
+            }
         }
     });
 
@@ -76,6 +86,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-typedoc');
+    grunt.loadNpmTasks('grunt-contrib-connect');
 
     // Lipwig server
     grunt.registerTask('lipwigStart', function() {
@@ -86,4 +97,5 @@ module.exports = function(grunt) {
     grunt.registerTask('lipwig', ['force:on', 'lipwigStart', 'force:off']);
     grunt.registerTask('build', ['tslint', 'lipwig', 'exec', 'clean:build', 'uglify'])
     grunt.registerTask('default', ['build']);
+    grunt.registerTask('chat', ['lipwigStart', 'connect']);
   };
