@@ -9,8 +9,13 @@ type UserMap = {
     [index: string]: User;
 };
 
+type GroupMap = {
+    [index: string]: User[];
+};
+
 export class Host extends SocketUser {
     private users: UserMap;
+    private groups: GroupMap;
     constructor(url: string, options: object = {}) {
         super(url);
         this.reserve('created', this.created);
@@ -22,6 +27,7 @@ export class Host extends SocketUser {
         });
 
         this.users = {};
+        this.groups = {};
     }
 
     public getUsers(): UserMap {
@@ -37,6 +43,39 @@ export class Host extends SocketUser {
         };
 
         this.sendMessage(message);
+    }
+
+    public assign(user: User, name: string): void {
+        let group: User[] = this.groups[name];
+        if (group === undefined) {
+            this.groups[name] = [];
+            group = this.groups[name];
+        }
+
+        if (group.indexOf(user) !== -1) {
+            // Already in group
+            return;
+        }
+
+        group.push(user);
+        user.send('assigned', name);
+    }
+
+    public unassign(user: User, name: string): void {
+        const group: User[] = this.groups[name];
+        if (group === undefined) {
+            return;
+        }
+
+        const position: number = group.indexOf(user);
+        if (position === -1) {
+            // Not in group
+            return;
+        }
+
+        this.groups[name] = group.splice(position, 1);
+        user.send('unassigned', name);
+
     }
 
     protected handle(event: MessageEvent): void {

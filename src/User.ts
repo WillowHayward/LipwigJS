@@ -24,6 +24,14 @@ export class User extends EventManager {
         this.parent.sendMessage(message);
     }
 
+    public assign(name: string): void {
+        this.parent.assign(this, name);
+    }
+
+    public unassign(name: string): void {
+        this.parent.unassign(this, name);
+    }
+
     public kick(reason: string = ''): void {
         this.send('kick', this.id, reason);
     }
