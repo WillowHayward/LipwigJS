@@ -21,6 +21,7 @@ type Filter = {
 export class Host extends SocketUser {
     private users: UserMap;
     private groups: GroupMap;
+    private options: object;
     constructor(url: string, options: object = {}) {
         super(url);
         this.reserve('created', this.created);
@@ -33,6 +34,7 @@ export class Host extends SocketUser {
 
         this.users = {};
         this.groups = {};
+        this.options = options;
     }
 
     public getUsers(): UserMap {
@@ -135,7 +137,7 @@ export class Host extends SocketUser {
     protected connected(): void {
         const message: Message = {
             event: 'create',
-            data: [],
+            data: [this.options],
             sender: '',
             recipient: []
         };
@@ -153,9 +155,10 @@ export class Host extends SocketUser {
 
     private joined(message: Message): boolean {
         const userID: string = message.data[0];
+        const data: object = message.data[1];
         const user: User = new User(userID, this);
         this.users[userID] = user;
-        this.emit('joined', user, message);
+        this.emit('joined', user, data, message);
 
         return false; // Block second emit
     }

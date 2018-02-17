@@ -6,10 +6,12 @@ import { Message } from './Types';
 
 export class Client extends SocketUser {
     private code: string;
+    private data: object;
     constructor(url: string, code: string, data: object = {}) {
         super(url);
         this.reserve('joined', this.setID);
         this.code = code;
+        this.data = data;
     }
 
     /**
@@ -30,7 +32,7 @@ export class Client extends SocketUser {
     protected connected(): void {
         const message: Message = {
             event: 'join',
-            data: [this.code],
+            data: [this.code, this.data],
             sender: '',
             recipient: []
         };
