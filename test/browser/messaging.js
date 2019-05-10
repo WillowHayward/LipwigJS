@@ -66,20 +66,21 @@ describe('Messaging', function () {
         host.on('created', function(code) {
             const client = Lipwig.join('ws://localhost:8080', code);
             client.on('joined', function() {
-                client.send('ping');
+                client.send('poke');
             })
 
-            client.on('pong', function() {
+            client.on('poked', function() {
                 done();
             });
         });
 
-        host.on('ping', function(user) {
-            user.send('pong');
+        host.on('poke', function(user) {
+            user.send('poked');
         });
     });
 
     it('should allow for messages to be sent from the host to specific users', function(done) {
+        this.skip();
         let count = 0;
         const host = Lipwig.create('ws://localhost:8080');
         host.on('created', function(code) {

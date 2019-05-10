@@ -10,7 +10,7 @@ describe('Groups', function() {
             host.on('created', function(code) {
                 client1 = Lipwig.join('ws://localhost:8080', code);
 
-                client1.on('ping', function() {
+                client1.on('poke', function() {
                     count++;
                     if (count === 2) { // TODO: This might have added a race condition
                         done();
@@ -19,7 +19,7 @@ describe('Groups', function() {
 
                 client2 = Lipwig.join('ws://localhost:8080', code);
 
-                client2.on('ping', function() {
+                client2.on('poke', function() {
                     count++;
                     if (count === 2) { // TODO: This might have added a race condition
                         done();
@@ -27,7 +27,7 @@ describe('Groups', function() {
                 });
                 client3 = Lipwig.join('ws://localhost:8080', code);
     
-                client3.on('ping', function() {
+                client3.on('poke', function() {
                     throw new Error();
                 })
             });
@@ -38,7 +38,7 @@ describe('Groups', function() {
                 }
                 users++;
                 if (users === 3) {
-                    host.send('ping', {
+                    host.send('poke', {
                         whitelist: ['main']
                     });
                 }
@@ -55,7 +55,7 @@ describe('Groups', function() {
             host.on('created', function(code) {
                 client1 = Lipwig.join('ws://localhost:8080', code);
 
-                client1.on('ping', function() {
+                client1.on('poke', function() {
                     count++;
                     if (count === 2) { // TODO: This might have added a race condition
                         done();
@@ -64,7 +64,7 @@ describe('Groups', function() {
 
                 client2 = Lipwig.join('ws://localhost:8080', code);
 
-                client2.on('ping', function() {
+                client2.on('poke', function() {
                     count++;
                     if (count === 2) { // TODO: This might have added a race condition
                         done();
@@ -72,7 +72,7 @@ describe('Groups', function() {
                 });
                 client3 = Lipwig.join('ws://localhost:8080', code);
     
-                client3.on('ping', function() {
+                client3.on('poke', function() {
                     throw new Error();
                 })
             });
@@ -83,7 +83,7 @@ describe('Groups', function() {
                 }
                 users++;
                 if (users === 3) {
-                    host.send('ping', {
+                    host.send('poke', {
                         blacklist: ['main']
                     });
                 }
@@ -100,20 +100,20 @@ describe('Groups', function() {
             host.on('created', function(code) {
                 client1 = Lipwig.join('ws://localhost:8080', code);
 
-                client1.on('ping', function() {
+                client1.on('poke', function() {
                     alert('a');
                     throw new Error();
                 });
 
                 client2 = Lipwig.join('ws://localhost:8080', code);
 
-                client2.on('ping', function() {
+                client2.on('poke', function() {
                     alert('b');
                     done();
                 });
                 client3 = Lipwig.join('ws://localhost:8080', code);
     
-                client3.on('ping', function() {
+                client3.on('poke', function() {
                     alert('c');
                     throw new Error();
                 })
@@ -129,7 +129,7 @@ describe('Groups', function() {
                 }
                 users++;
                 if (users === 3) {
-                    host.send('ping', {
+                    host.send('poke', {
                         whitelist: ['main'],
                         blacklist: ['secondary']
                     });

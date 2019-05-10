@@ -17,6 +17,7 @@ export abstract class SocketUser extends EventManager {
         super();
         this.id = '';
         this.reserved = {};
+        this.reserve('ping', this.pong);
 
         const cleanUrl: string = url.replace(/https?:\/\//, 'ws://');
         this.socket = new WebSocket(cleanUrl);
@@ -44,6 +45,17 @@ export abstract class SocketUser extends EventManager {
             message.sender = this.id;
         }
         this.socket.send(JSON.stringify(message));
+    }
+
+    public ping(): void {
+        const now: number = new Date().getTime();
+        const message: Message = {
+            event: 'lw-ping',
+            data: [now],
+            recipient: [],
+            sender: ''
+        };
+        this.sendMessage(message);
     }
 
     protected setID(message: Message): boolean {
@@ -94,5 +106,14 @@ export abstract class SocketUser extends EventManager {
         socket.addEventListener('open', (): void => {
             this.reconnect(socket);
         });
+    }
+
+    private pong(message: Message): boolean {
+        const then: number = message.data[0];
+        const now: number = new Date().getTime();
+        const ping: number = now - then;
+        this.emit('pong', ping);
+
+        return false;
     }
 }
