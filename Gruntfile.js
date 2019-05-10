@@ -96,6 +96,7 @@ module.exports = function(grunt) {
     // Default task(s).
     grunt.registerTask('lipwig', ['force:on', 'lipwigStart', 'force:off']);
     grunt.registerTask('build', ['tslint', 'lipwig', 'exec', 'clean:build', 'uglify'])
+    grunt.registerTask('lint', ['tslint']);
     grunt.registerTask('default', ['build']);
     grunt.registerTask('chat', ['lipwigStart', 'connect']);
   };
