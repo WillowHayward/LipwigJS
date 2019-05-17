@@ -22,6 +22,12 @@ export class Host extends SocketUser {
     private users: UserMap;
     private groups: GroupMap;
     private options: object;
+
+    /**
+     * Create a new Lipwig room
+     * @param url       Websocket url of LipwigCore server
+     * @param options   Options with which to create room
+     */
     constructor(url: string, options: object = {}) {
         super(url);
         this.reserve('created', this.created);
@@ -37,6 +43,9 @@ export class Host extends SocketUser {
         this.options = options;
     }
 
+    /**
+     * @return map of all users in room
+     */
     public getUsers(): UserMap {
         return this.users; // TODO: This is returning a reference to the original object
     }
@@ -134,6 +143,9 @@ export class Host extends SocketUser {
         this.emit.apply(this, args);
     }
 
+    /**
+     * Final stage of connection handshake - sends create message to LipwigCore server
+     */
     protected connected(): void {
         const message: Message = {
             event: 'create',
