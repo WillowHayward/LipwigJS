@@ -3,7 +3,12 @@
  */
 export type Message = {
     event: string;
-    data: any[]; // tslint:disable-line:no-any
+    data: unknown[];
     recipient: string[];
     sender: string;
 };
+
+export const DEFAULTS = {
+  port: 8080
+};
+

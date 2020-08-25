@@ -21,16 +21,8 @@ module.exports = function(grunt) {
             tsc: './node_modules/typescript/bin/tsc',
             mocha: './node_modules/mocha/bin/mocha',
             webpack: './node_modules/.bin/webpack',
-            karma: './node_modules/karma/bin/karma start karma.conf.js'
-        },
-        tslint: {
-            options: {
-                rulesDirectory: 'node_modules/tslint-microsoft-contrib',
-                configuration: grunt.file.readJSON("tslint.json")
-            },
-            files: {
-                src: ['src/*.ts']
-            }
+            karma: './node_modules/karma/bin/karma start karma.conf.js',
+            lint: 'yarn eslint . --ext .ts'
         },
         clean: {
             build: ['build'],
@@ -79,10 +71,8 @@ module.exports = function(grunt) {
         }
     });
     
-    // Load the plugin that provides the "uglify" task.
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-exec');
-    grunt.loadNpmTasks('grunt-tslint');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-typedoc');
@@ -95,8 +85,8 @@ module.exports = function(grunt) {
     });
     // Default task(s).
     grunt.registerTask('lipwig', ['force:on', 'lipwigStart', 'force:off']);
-    grunt.registerTask('build', ['tslint', 'lipwig', 'exec', 'clean:build', 'uglify'])
-    grunt.registerTask('lint', ['tslint']);
+    grunt.registerTask('build', ['exec:lint', 'lipwig', 'exec', 'clean:build', 'uglify'])
+    grunt.registerTask('lint', ['exec:lint']);
     grunt.registerTask('default', ['build']);
     grunt.registerTask('chat', ['lipwigStart', 'connect']);
   };

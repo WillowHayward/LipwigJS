@@ -14,7 +14,7 @@ export class User extends EventManager {
         this.parent = parent;
     }
 
-    public send(event: string, ...args: any[]): void { // tslint:disable-line:no-any
+    public send(event: string, ...args: unknown[]): void {
         const message: Message = {
             event: event,
             data: args,
@@ -32,7 +32,7 @@ export class User extends EventManager {
         this.parent.unassign(this, name);
     }
 
-    public kick(reason: string = ''): void {
+    public kick(reason = ''): void {
         this.send('kick', this.id, reason);
     }
 }

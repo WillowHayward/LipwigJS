@@ -59,6 +59,10 @@ export abstract class SocketUser extends EventManager {
     }
 
     protected setID(message: Message): boolean {
+        if (typeof message.data[0] !== 'string') {
+          return false;
+        }
+
         this.id = message.data[0];
         this.deteReservation(message.event);
 
