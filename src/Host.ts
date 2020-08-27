@@ -98,6 +98,7 @@ export class Host extends SocketUser {
     }
 
     public send(message: string, filter: Filter, ...args: unknown[]): void {
+      // TODO: Move this to server logic
         let users: User[] = [];
         if (filter.whitelist === undefined) {
             filter.whitelist = [];
