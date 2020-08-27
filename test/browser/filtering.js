@@ -6,9 +6,9 @@ describe('Groups', function() {
             let client3;
             let count = 0;
             let users = 0;
-            const host = Lipwig.create('ws://localhost:8080');
+            const host = Lipwig.create(url);
             host.on('created', function(code) {
-                client1 = Lipwig.join('ws://localhost:8080', code);
+                client1 = Lipwig.join(url, code);
 
                 client1.on('poke', function() {
                     count++;
@@ -17,7 +17,7 @@ describe('Groups', function() {
                     }
                 });
 
-                client2 = Lipwig.join('ws://localhost:8080', code);
+                client2 = Lipwig.join(url, code);
 
                 client2.on('poke', function() {
                     count++;
@@ -25,7 +25,7 @@ describe('Groups', function() {
                         done();
                     }
                 });
-                client3 = Lipwig.join('ws://localhost:8080', code);
+                client3 = Lipwig.join(url, code);
     
                 client3.on('poke', function() {
                     throw new Error();
@@ -51,9 +51,9 @@ describe('Groups', function() {
             let client3;
             let count = 0;
             let users = 0;
-            const host = Lipwig.create('ws://localhost:8080');
+            const host = Lipwig.create(url);
             host.on('created', function(code) {
-                client1 = Lipwig.join('ws://localhost:8080', code);
+                client1 = Lipwig.join(url, code);
 
                 client1.on('poke', function() {
                     count++;
@@ -62,7 +62,7 @@ describe('Groups', function() {
                     }
                 });
 
-                client2 = Lipwig.join('ws://localhost:8080', code);
+                client2 = Lipwig.join(url, code);
 
                 client2.on('poke', function() {
                     count++;
@@ -70,7 +70,7 @@ describe('Groups', function() {
                         done();
                     }
                 });
-                client3 = Lipwig.join('ws://localhost:8080', code);
+                client3 = Lipwig.join(url, code);
     
                 client3.on('poke', function() {
                     throw new Error();
@@ -96,25 +96,22 @@ describe('Groups', function() {
             let client3;
             let count = 0;
             let users = 0;
-            const host = Lipwig.create('ws://localhost:8080');
+            const host = Lipwig.create(url);
             host.on('created', function(code) {
-                client1 = Lipwig.join('ws://localhost:8080', code);
+                client1 = Lipwig.join(url, code);
 
                 client1.on('poke', function() {
-                    alert('a');
                     throw new Error();
                 });
 
-                client2 = Lipwig.join('ws://localhost:8080', code);
+                client2 = Lipwig.join(url, code);
 
                 client2.on('poke', function() {
-                    alert('b');
                     done();
                 });
-                client3 = Lipwig.join('ws://localhost:8080', code);
+                client3 = Lipwig.join(url, code);
     
                 client3.on('poke', function() {
-                    alert('c');
                     throw new Error();
                 })
             });

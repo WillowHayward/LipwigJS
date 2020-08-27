@@ -1,8 +1,8 @@
 describe('Kicking', function () {
     it('should kick users', function(done) {
-        const host = Lipwig.create('ws://localhost:8080');
+        const host = Lipwig.create(url);
         host.on('created', function(code) {
-            const client = Lipwig.join('ws://localhost:8080', code);
+            const client = Lipwig.join(url, code);
             client.on('kicked', function() {
                 done();
             });
@@ -14,9 +14,9 @@ describe('Kicking', function () {
     });
 
     it('should provided a reason to kicked users', function(done) {
-        const host = Lipwig.create('ws://localhost:8080');
+        const host = Lipwig.create(url);
         host.on('created', function(code) {
-            const client = Lipwig.join('ws://localhost:8080', code);
+            const client = Lipwig.join(url, code);
             client.on('kicked', function(reason) {
                 if (reason === 'The reason') {
                     done();

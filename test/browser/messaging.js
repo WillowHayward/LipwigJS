@@ -1,32 +1,15 @@
 describe('Messaging', function () {
     it('should allow for rooms to be created', function(done) {
-        const host = Lipwig.create('ws://localhost:8080');
+        const host = Lipwig.create(url);
         host.on('created', function() {
             done();
         });
     });
 
     it('should allow for rooms to be joined', function(done) {
-        const host = Lipwig.create('ws://localhost:8080');
+        const host = Lipwig.create(url);
         host.on('created', function(code) {
-            const client = Lipwig.join('ws://localhost:8080', code);
-            client.on('joined', function() {
-                done();
-            })
-        });
-    });
-
-    it('should allow for rooms to be created using http/https masking', function(done) {
-        const host = Lipwig.create('https://localhost:8080');
-        host.on('created', function() {
-            done();
-        })
-    });
-
-    it('should allow for rooms to be joined using http/https masking', function(done) {
-        const host = Lipwig.create('http://localhost:8080');
-        host.on('created', function(code) {
-            const client = Lipwig.join('https://localhost:8080', code);
+            const client = Lipwig.join(url, code);
             client.on('joined', function() {
                 done();
             })
@@ -34,9 +17,9 @@ describe('Messaging', function () {
     });
 
     it('should allow for messages to be sent from the host to an arbitrary user', function(done) {
-        const host = Lipwig.create('ws://localhost:8080');
+        const host = Lipwig.create(url);
         host.on('created', function(code) {
-            const client = Lipwig.join('ws://localhost:8080', code);
+            const client = Lipwig.join(url, code);
             client.on('done', function() {
                 done();
             });
@@ -48,12 +31,12 @@ describe('Messaging', function () {
     });
 
     it('should allow for messages to be sent from a user to the host', function(done) {
-        const host = Lipwig.create('ws://localhost:8080');
+        const host = Lipwig.create(url);
         host.on('created', function(code) {
-            const client = Lipwig.join('ws://localhost:8080', code);
+            const client = Lipwig.join(url, code);
             client.on('joined', function() {
                 client.send('done');
-            })
+            });
         });
 
         host.on('done', function() {
@@ -62,9 +45,9 @@ describe('Messaging', function () {
     });
 
     it('should allow for messages to be sent to and from the host and an arbitrary user', function(done) {
-        const host = Lipwig.create('ws://localhost:8080');
+        const host = Lipwig.create(url);
         host.on('created', function(code) {
-            const client = Lipwig.join('ws://localhost:8080', code);
+            const client = Lipwig.join(url, code);
             client.on('joined', function() {
                 client.send('poke');
             })
@@ -80,20 +63,17 @@ describe('Messaging', function () {
     });
 
     it('should allow for messages to be sent from the host to specific users', function(done) {
-        this.skip();
         let count = 0;
-        const host = Lipwig.create('ws://localhost:8080');
+        const host = Lipwig.create(url);
         host.on('created', function(code) {
             for (i = 0; i < 8; i++) {
-                client = Lipwig.join('ws://localhost:8080', code);
+                client = Lipwig.join(url, code);
                 client.on('add', function() {
                     count++;
-                });
-                client.on('finish', function() {
                     if (count === 4) {
                         done();
                     }
-                })
+                });
             }
         });
 
@@ -105,8 +85,6 @@ describe('Messaging', function () {
                 for (i = 0; i < 8; i+= 2) {
                     users[i].send('add');
                 }
-
-                users[0].send('finish'); // TODO: This adds a race condition. Fix that
             }
         });
     });

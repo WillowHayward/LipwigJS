@@ -1,28 +1,26 @@
 /**
  * @author: William Hayward
  */
-import { EventManager } from './EventManager';
+import { EventManager } from 'lipwig-events';
 import { Message } from './Types';
-type FunctionMap = {
-    [index: string]: Function;
-};
 
 export abstract class SocketUser extends EventManager {
     public id: string;
-    protected reserved: FunctionMap;
+    protected reserved: EventManager;
     private socket: WebSocket;
     private retry: boolean;
     private url: string;
     constructor(url: string) {
         super();
+        this.url = url;
         this.id = '';
-        this.reserved = {};
-        this.reserve('ping', this.pong);
+        this.reserved = new EventManager();
+        this.reserved.on('ping', this.pong, this);
 
-        const cleanUrl: string = url.replace(/https?:\/\//, 'ws://');
-        this.socket = new WebSocket(cleanUrl);
-        this.retry = true;
-        this.url = cleanUrl;
+        //const cleanUrl: string = url.replace(/https?:\/\//, 'ws://');
+        this.socket = new WebSocket(url);
+        this.retry = false;
+        //TODO: Make this an option on creation
         this.addListeners();
     }
 
@@ -58,26 +56,11 @@ export abstract class SocketUser extends EventManager {
         this.sendMessage(message);
     }
 
-    protected setID(message: Message): boolean {
-        if (typeof message.data[0] !== 'string') {
-          return false;
-        }
-
-        this.id = message.data[0];
-        this.deteReservation(message.event);
-
-        return true;
+    protected setID(id: string): void {
+        this.id = id;
     }
 
     protected abstract handle(event: MessageEvent): void;
-
-    protected reserve(event: string, callback: Function): void {
-        this.reserved[event] = callback.bind(this);
-    }
-
-    protected deteReservation(event: string): void {
-        delete this.reserved[event];
-    }
 
     protected abstract connected(): void;
 
@@ -96,7 +79,8 @@ export abstract class SocketUser extends EventManager {
             if (this.retry) {
                 this.autoReconnect();
             }
-            // TODO: Connection close handling
+            this.emit('reconnected');
+            // TODO: This is a stub - connection close handling
         });
     }
 
@@ -112,8 +96,7 @@ export abstract class SocketUser extends EventManager {
         });
     }
 
-    private pong(message: Message): boolean {
-        const then: number = message.data[0];
+    private pong(then: number): boolean {
         const now: number = new Date().getTime();
         const ping: number = now - then;
         this.emit('pong', ping);

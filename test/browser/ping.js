@@ -1,7 +1,7 @@
 describe('Ping', function () {
     it('should allow for hosts to ping', function(done) {
         this.skip();
-        const host = Lipwig.create('ws://localhost:8080');
+        const host = Lipwig.create(url);
         host.on('created', function() {
             host.ping();
         });

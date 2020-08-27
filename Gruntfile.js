@@ -19,7 +19,6 @@ module.exports = function(grunt) {
         },
         exec: {
             tsc: './node_modules/typescript/bin/tsc',
-            mocha: './node_modules/mocha/bin/mocha',
             webpack: './node_modules/.bin/webpack',
             karma: './node_modules/karma/bin/karma start karma.conf.js',
             lint: 'yarn eslint . --ext .ts'

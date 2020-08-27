@@ -2,11 +2,11 @@
  * @author: William Hayward
  */
 import { SocketUser } from './SocketUser';
-import { Message } from './Types';
+import { Message, DataMap } from './Types';
 
 export class Client extends SocketUser {
     private code: string;
-    private data: object;
+    private data: DataMap;
     
     /**
      * Attempt to join an existing Lipwig room
@@ -14,9 +14,9 @@ export class Client extends SocketUser {
      * @param code  Room code to attempt to join
      * @param data  Data to pass to room host on connection
      */
-    constructor(url: string, code: string, data: object = {}) {
+    constructor(url: string, code: string, data: DataMap = {}) {
         super(url);
-        this.reserve('joined', this.setID);
+        this.reserved.on('joined', this.setID, {object: this});
         this.code = code;
         this.data = data;
     }
@@ -26,7 +26,7 @@ export class Client extends SocketUser {
      * @param event The event name
      * @param args  Arguments to send
      */
-    public send(event: string, ...args: any[]): void { // tslint:disable-line:no-any
+    public send(event: string, ...args: unknown[]): void { 
         const message: Message = {
             event: event,
             data: args,
@@ -55,15 +55,9 @@ export class Client extends SocketUser {
      */
     protected handle(event: MessageEvent): void {
         const message: Message = JSON.parse(event.data);
-        if (message.event in this.reserved) {
+        const args: unknown[] = message.data.concat(message);
 
-            // Reserved message functions return false if they're blocking
-            if (!this.reserved[message.event](message)) {
-                return;
-            }
-        }
-        const args: any[] = [message.event].concat(message.data); // tslint:disable-line:no-any
-        args.push(message);
-        this.emit.apply(this, args);
+        this.reserved.emit(message.event, ...args);
+        this.emit(message.event, ...args);
     }
 }

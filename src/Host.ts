@@ -2,7 +2,7 @@
  * @author: William Hayward
  */
 import { SocketUser } from './SocketUser';
-import { Message } from './Types';
+import { Message, DataMap } from './Types';
 import { User } from './User';
 
 type UserMap = {
@@ -21,22 +21,17 @@ type Filter = {
 export class Host extends SocketUser {
     private users: UserMap;
     private groups: GroupMap;
-    private options: object;
+    private options: DataMap;
 
     /**
      * Create a new Lipwig room
      * @param url       Websocket url of LipwigCore server
      * @param options   Options with which to create room
      */
-    constructor(url: string, options: object = {}) {
+    constructor(url: string, options: DataMap = {}) {
         super(url);
-        this.reserve('created', this.created);
-        this.reserve('joined', this.joined);
-        this.reserve('reconnected', (): boolean => {
-            this.emit('reconnected');
-
-            return false;
-        });
+        this.reserved.once('created', this.created, { object: this });
+        this.reserved.on('joined', this.joined, { object: this });
 
         this.users = {};
         this.groups = {};
@@ -50,7 +45,7 @@ export class Host extends SocketUser {
         return this.users; // TODO: This is returning a reference to the original object
     }
 
-    public close(reason: string): void {
+    public close(reason = ''): void {
         const message: Message = {
             event: 'close',
             data: [reason],
@@ -102,7 +97,7 @@ export class Host extends SocketUser {
         return group;
     }
 
-    public send(message: string, filter: Filter, ...args: any[]): void { // tslint:disable-line:no-any
+    public send(message: string, filter: Filter, ...args: unknown[]): void {
         let users: User[] = [];
         if (filter.whitelist === undefined) {
             filter.whitelist = [];
@@ -116,31 +111,31 @@ export class Host extends SocketUser {
 
         const blacklist: User[] = this.filter(filter.blacklist, false);
 
-        const finalArgs: any[] = [message].concat(args); // tslint:disable-line:no-any
         users.forEach((user: User): void => {
             if (blacklist.indexOf(user) > -1) {
                 return;
             }
-            user.send.apply(user, finalArgs);
+            user.send(message, ...args);
         });
     }
 
     protected handle(event: MessageEvent): void {
         const message: Message = JSON.parse(event.data);
-        if (message.event in this.reserved) {
-            if (!this.reserved[message.event](message)) {
-                return;
-            }
-        }
+        const args: unknown[] = message.data.concat(message);
 
-        const args: any[] = [message.event].concat(message.data); // tslint:disable-line:no-any
+        this.reserved.emit(message.event, ...args);
+
         if (message.sender in this.users) {
             const user: User = this.users[message.sender];
             args.push(message);
-            user.emit.apply(user, args);
-            args.splice(1, 0, user);
+            user.emit(message.event, ...args);
+            args.splice(0, 0, user);
         }
-        this.emit.apply(this, args);
+
+        if (message.event !== 'joined') {
+          // 'joined' messages are handled in a reserved event
+          this.emit(message.event, ...args);
+        }
     }
 
     /**
@@ -156,23 +151,15 @@ export class Host extends SocketUser {
         this.sendMessage(message);
     }
 
-    private created(message: Message): boolean {
-        this.setID(message); // Also deleted reserved event
-
-        const id: string = message.data[0];
-        this.emit('created', id);
-
-        return false;
+    private created(id: string): void {
+        this.setID(id); // Also deleted reserved event
+        //this.emit('created', id);
     }
 
-    private joined(message: Message): boolean {
-        const userID: string = message.data[0];
-        const data: object = message.data[1];
+    private joined(userID: string, data: DataMap, message: Message): void {
         const user: User = new User(userID, this);
         this.users[userID] = user;
         this.emit('joined', user, data, message);
-
-        return false; // Block second emit
     }
 
     private filter(groups: string[], whitelist: boolean): User[] {

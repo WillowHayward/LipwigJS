@@ -1,7 +1,7 @@
 /**
  * @author: William Hayward
  */
-import { EventManager } from './EventManager';
+import { EventManager } from 'lipwig-events';
 import { Host } from './Host';
 import { Message } from './Types';
 
