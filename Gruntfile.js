@@ -27,27 +27,10 @@ module.exports = function(grunt) {
             build: ['build'],
             dist: ['dist']
         },
-        watch: {
-            scripts: {
-                files: ['src/*.ts'],
-                tasks: ['build']
-            }
-        }, 
-        typedoc: {
-            build: {
-                options: {
-                    module: 'commonjs',
-                    target: 'es5',
-                    out: 'docs/',
-                    name: 'LipwigJS'
-                },
-                src: 'src/**/*'
-            }
-        },
         connect: {
             server: {
                 options: {
-                    port: 8000,
+                    port: 8989,
                     hostname: '*',
                     base: ['./dist/', './example/'],
                     keepalive: true
@@ -73,8 +56,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-exec');
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-typedoc');
     grunt.loadNpmTasks('grunt-contrib-connect');
 
     // Lipwig server
