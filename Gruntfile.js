@@ -24,7 +24,7 @@ module.exports = function(grunt) {
             lint: 'yarn eslint . --ext .ts'
         },
         clean: {
-            build: ['build'],
+            build: ['build', 'lipwig.db.tmp'],
             dist: ['dist']
         },
         connect: {
@@ -61,7 +61,8 @@ module.exports = function(grunt) {
     // Lipwig server
     grunt.registerTask('lipwigStart', function() {
         const Lipwig = require('lipwig');
-        lipwig = new Lipwig();
+        const config = require('./node_modules/lipwig/lib/Types').testConfig;
+        lipwig = new Lipwig(config);
     });
     // Default task(s).
     grunt.registerTask('lipwig', ['force:on', 'lipwigStart', 'force:off']);
