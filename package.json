@@ -1,10 +1,12 @@
 {
   "name": "lipwigjs",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/Lipwig.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "build": "grunt"
+    "build": "grunt",
+    "prepare": "tsc && grunt exec:bundle"
   },
   "keywords": [],
   "author": "William Hayward <WillHayCode@gmail.com> (https://WillHayCode.com)",
@@ -13,12 +15,17 @@
     "@typescript-eslint/eslint-plugin": "3.10.1",
     "@typescript-eslint/parser": "3.10.1",
     "chai": "4.2.0",
+    "circular-dependency-plugin": "^5.2.0",
+    "dts-bundle-generator": "^5.4.0",
     "eslint": "7.7.0",
     "grunt": "1.3.0",
     "grunt-contrib-clean": "1.1.0",
     "grunt-contrib-connect": "1.0.2",
     "grunt-contrib-uglify": "3.3.0",
     "grunt-exec": "3.0.0",
+    "grunt-karma": "^4.0.0",
+    "grunt-ts": "^6.0.0-beta.22",
+    "grunt-webpack": "^4.0.2",
     "karma": "^5.1.1",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",

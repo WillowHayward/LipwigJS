@@ -4,7 +4,7 @@
 import { SocketUser } from './SocketUser';
 import { Message, DataMap } from './Types';
 
-export class Client extends SocketUser {
+export class LipwigClient extends SocketUser {
     private code: string;
     private data: DataMap;
     

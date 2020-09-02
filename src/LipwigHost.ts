@@ -18,7 +18,7 @@ type Filter = {
     blacklist: string[];
 };
 
-export class Host extends SocketUser {
+export class LipwigHost extends SocketUser {
     private users: UserMap;
     private groups: GroupMap;
     private options: DataMap;

@@ -2,13 +2,13 @@
  * @author: William Hayward
  */
 import { EventManager } from 'lipwig-events';
-import { Host } from './Host';
+import { LipwigHost } from './LipwigHost';
 import { Message } from './Types';
 
 export class User extends EventManager {
     public id: string;
-    private parent: Host;
-    constructor(id: string, parent: Host) {
+    private parent: LipwigHost;
+    constructor(id: string, parent: LipwigHost) {
       super();
       this.id = id;
       this.parent = parent;

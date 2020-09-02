@@ -1,15 +1,16 @@
 describe('Messaging', function () {
+    
     it('should allow for rooms to be created', function(done) {
-        const host = Lipwig.create(url);
+        const host = new LipwigHost(url);
         host.on('created', function() {
             done();
         });
     });
 
     it('should allow for rooms to be joined', function(done) {
-        const host = Lipwig.create(url);
+        const host = new LipwigHost(url);
         host.on('created', function(code) {
-            const client = Lipwig.join(url, code);
+            const client = new LipwigClient(url, code);
             client.on('joined', function() {
                 done();
             })
@@ -17,9 +18,9 @@ describe('Messaging', function () {
     });
 
     it('should allow for messages to be sent from the host to an arbitrary user', function(done) {
-        const host = Lipwig.create(url);
+        const host = new LipwigHost(url);
         host.on('created', function(code) {
-            const client = Lipwig.join(url, code);
+            const client = new LipwigClient(url, code);
             client.on('done', function() {
                 done();
             });
@@ -31,9 +32,9 @@ describe('Messaging', function () {
     });
 
     it('should allow for messages to be sent from a user to the host', function(done) {
-        const host = Lipwig.create(url);
+        const host = new LipwigHost(url);
         host.on('created', function(code) {
-            const client = Lipwig.join(url, code);
+            const client = new LipwigClient(url, code);
             client.on('joined', function() {
                 client.send('done');
             });
@@ -45,9 +46,9 @@ describe('Messaging', function () {
     });
 
     it('should allow for messages to be sent to and from the host and an arbitrary user', function(done) {
-        const host = Lipwig.create(url);
+        const host = new LipwigHost(url);
         host.on('created', function(code) {
-            const client = Lipwig.join(url, code);
+            const client = new LipwigClient(url, code);
             client.on('joined', function() {
                 client.send('poke');
             })
@@ -64,10 +65,10 @@ describe('Messaging', function () {
 
     it('should allow for messages to be sent from the host to specific users', function(done) {
         let count = 0;
-        const host = Lipwig.create(url);
+        const host = new LipwigHost(url);
         host.on('created', function(code) {
             for (i = 0; i < 8; i++) {
-                client = Lipwig.join(url, code);
+                client = new LipwigClient(url, code);
                 client.on('add', function() {
                     count++;
                     if (count === 4) {

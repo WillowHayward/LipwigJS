@@ -1,3 +1,5 @@
+const webpackConfig = require('./webpack.config');
+
 module.exports = function(grunt) {
 
     // Project configuration.
@@ -18,13 +20,11 @@ module.exports = function(grunt) {
             }
         },
         exec: {
-            tsc: './node_modules/typescript/bin/tsc',
-            webpack: './node_modules/.bin/webpack',
-            karma: './node_modules/karma/bin/karma start karma.conf.js',
-            lint: 'yarn eslint . --ext .ts'
+            lint: 'yarn eslint . --ext .ts',
+            bundle: './node_modules/dts-bundle-generator/dist/bin/dts-bundle-generator.js -o ./lib/index.d.ts ./src/Lipwig.ts'
         },
         clean: {
-            build: ['build', 'lipwig.db.tmp'],
+            build: ['lipwig.db.tmp', '.tscache/'],
             dist: ['dist']
         },
         connect: {
@@ -36,7 +36,21 @@ module.exports = function(grunt) {
                     keepalive: true
                 }
             }
-        }
+        },
+        webpack: {
+            dev: { ...webpackConfig, 'mode': 'development'},
+            prod: { ...webpackConfig, 'mode': 'production'}
+        },
+        ts: {
+            default : {
+              tsconfig: './tsconfig.json'
+            }
+        },
+        karma: {
+            unit: {
+                configFile: './karma.conf.js'
+            }
+        },
     });
 
     var previous_force_state = grunt.option("force");
@@ -57,6 +71,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-exec');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-webpack');
+    grunt.loadNpmTasks('grunt-ts');
+    grunt.loadNpmTasks('grunt-karma');
 
     // Lipwig server
     grunt.registerTask('lipwigStart', function() {
@@ -66,7 +83,8 @@ module.exports = function(grunt) {
     });
     // Default task(s).
     grunt.registerTask('lipwig', ['force:on', 'lipwigStart', 'force:off']);
-    grunt.registerTask('build', ['exec:lint', 'lipwig', 'exec', 'clean:build', 'uglify'])
+    grunt.registerTask('build', ['exec:lint', 'ts', 'webpack:dev', 'lipwig', 'karma', 'exec:bundle', 'clean:build'])
+    grunt.registerTask('quick', ['exec:tsc', 'exec:webpack', 'exec:bundle']);
     grunt.registerTask('lint', ['exec:lint']);
     grunt.registerTask('default', ['build']);
     grunt.registerTask('chat', ['lipwigStart', 'connect']);

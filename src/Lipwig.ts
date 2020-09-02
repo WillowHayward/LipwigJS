@@ -2,16 +2,16 @@
  * Primary class to initate interaction with a LipwigCore server
  * @author: William Hayward
  */
-import { Client } from './Client';
-import { Host } from './Host';
-import { DataMap } from './Types';
+import { LipwigClient } from './LipwigClient';
+import { LipwigHost } from './LipwigHost';
+//import { DataMap } from './Types';
 
-/*export {
-  Client,
-  Host
-}*/
+export {
+  LipwigClient,
+  LipwigHost
+}
 
-export const Lipwig = {
+/*export const Lipwig = {
   /**
      * Attempt to join an existing Lipwig room
      * @param url   Websocket url of LipwigCore server
@@ -19,7 +19,7 @@ export const Lipwig = {
      * @param data  Data to pass to room host on connection
      * @return New client object
      */
-  join : (url: string, code: string, data: DataMap = {}): Client => {
+/*join : (url: string, code: string, data: DataMap = {}): Client => {
     return new Client(url, code, data);
   },
 
@@ -28,9 +28,9 @@ export const Lipwig = {
      * @param url       Websocket url of LipwigCore server
      * @param options   Options with which to create room
      */
-  create : (url: string, options: DataMap = {}): Host => {
+/*create : (url: string, options: DataMap = {}): Host => {
     return new Host(url, options);
   }
 }
 
-
+*/

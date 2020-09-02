@@ -1,7 +1,7 @@
 /* Not currently implemented
 describe('reconnection', function() {
     it('should allow for the host to reconnect', function(done) {
-        const host = Lipwig.create(url);
+        const host = new LipwigHost(url);
         host.on('created', function() {
             host.retry = false;
             host.socket.close();
@@ -17,7 +17,7 @@ describe('reconnection', function() {
     });
 
     it('should allow the host to automatically reconnect', function(done) {
-        const host = Lipwig.create(url);
+        const host = new LipwigHost(url);
         host.on('created', function(code) {
             host.socket.close();
         });
@@ -28,9 +28,9 @@ describe('reconnection', function() {
     });
 
     it('should allow for clients to reconnect', function(done) {
-        const host = Lipwig.create(url);
+        const host = new LipwigHost(url);
         host.on('created', function(code) {
-            const client = Lipwig.join(url, code);
+            const client = new LipwigClient(url, code);
             client.on('reconnected', function() {
                 client.send('rejoined');
             });
@@ -50,9 +50,9 @@ describe('reconnection', function() {
     });
 
     it('should allow clients to automatically reconnect', function(done) {
-        const host = Lipwig.create(url);
+        const host = new LipwigHost(url);
         host.on('created', function(code) {
-            const client = Lipwig.join(url, code);
+            const client = new LipwigClient(url, code);
             client.on('reconnected', function() {
                 client.send('rejoined');
             });

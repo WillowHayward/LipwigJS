@@ -1,9 +1,12 @@
 {
     "compilerOptions": {
+        "rootDir": "./src",
+        "declaration": true,
+        "strict": true,
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
-        "outDir": "./build",
+        "outDir": "./lib",
         "sourceMap": false
     },
     "include": [

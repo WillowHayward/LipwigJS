@@ -4,7 +4,7 @@ const config = {
     },
     output: {
       libraryTarget: 'window',
-      filename: '[name].js',
+      filename: 'lipwig.js',
       path: __dirname + '/dist'
     }
 }

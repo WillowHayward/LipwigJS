@@ -9,9 +9,9 @@ describe('Groups', function() {
             let client3;
             let count = 0;
             let users = 0;
-            const host = Lipwig.create(url);
+            const host = new LipwigHost(url);
             host.on('created', (code) => {
-                client1 = Lipwig.join(url, code);
+                client1 = new LipwigClient(url, code);
 
                 client1.on('poke', () => {
                     count++;
@@ -20,7 +20,7 @@ describe('Groups', function() {
                     }
                 });
 
-                client2 = Lipwig.join(url, code);
+                client2 = new LipwigClient(url, code);
 
                 client2.on('poke', () => {
                     count++;
@@ -28,7 +28,7 @@ describe('Groups', function() {
                         done();
                     }
                 });
-                client3 = Lipwig.join(url, code);
+                client3 = new LipwigClient(url, code);
     
                 client3.on('poke', () => {
                     throw new Error('Should not have poked client3');
@@ -54,9 +54,9 @@ describe('Groups', function() {
             let client3;
             let count = 0;
             let users = 0;
-            const host = Lipwig.create(url);
+            const host = new LipwigHost(url);
             host.on('created', (code) => {
-                client1 = Lipwig.join(url, code);
+                client1 = new LipwigClient(url, code);
 
                 client1.on('poke', () => {
                     count++;
@@ -65,7 +65,7 @@ describe('Groups', function() {
                     }
                 });
 
-                client2 = Lipwig.join(url, code);
+                client2 = new LipwigClient(url, code);
 
                 client2.on('poke', () => {
                     count++;
@@ -73,7 +73,7 @@ describe('Groups', function() {
                         done();
                     }
                 });
-                client3 = Lipwig.join(url, code);
+                client3 = new LipwigClient(url, code);
     
                 client3.on('poke', () => {
                     throw new Error('Should not have poked client3');
@@ -99,20 +99,20 @@ describe('Groups', function() {
             let client3;
             let count = 0;
             let users = 0;
-            const host = Lipwig.create(url);
+            const host = new LipwigHost(url);
             host.on('created', (code) => {
-                client1 = Lipwig.join(url, code);
+                client1 = new LipwigClient(url, code);
 
                 client1.on('poke', () => {
                     throw new Error('Should not have poked client1');
                 });
 
-                client2 = Lipwig.join(url, code);
+                client2 = new LipwigClient(url, code);
 
                 client2.on('poke', () => {
                     done();
                 });
-                client3 = Lipwig.join(url, code);
+                client3 = new LipwigClient(url, code);
     
                 client3.on('poke', () => {
                     throw new Error('Should not have poked client3');
