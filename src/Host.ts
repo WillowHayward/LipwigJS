@@ -29,161 +29,161 @@ export class Host extends SocketUser {
      * @param options   Options with which to create room
      */
     constructor(url: string, options: DataMap = {}) {
-        super(url);
-        this.reserved.once('created', this.created, { object: this });
-        this.reserved.on('joined', this.joined, { object: this });
+      super(url);
+      this.reserved.once('created', this.created, { object: this });
+      this.reserved.on('joined', this.joined, { object: this });
 
-        this.users = {};
-        this.groups = {};
-        this.options = options;
+      this.users = {};
+      this.groups = {};
+      this.options = options;
     }
 
     /**
      * @return map of all users in room
      */
     public getUsers(): UserMap {
-        return this.users; // TODO: This is returning a reference to the original object
+      return this.users; // TODO: This is returning a reference to the original object
     }
 
     public close(reason = ''): void {
-        const message: Message = {
-            event: 'close',
-            data: [reason],
-            recipient: [],
-            sender: this.id
-        };
+      const message: Message = {
+        event: 'close',
+        data: [reason],
+        recipient: [],
+        sender: this.id
+      };
 
-        this.sendMessage(message);
+      this.sendMessage(message);
     }
 
     public assign(user: User, name: string): void {
-        let group: User[] = this.groups[name];
-        if (group === undefined) {
-            this.groups[name] = [];
-            group = this.groups[name];
-        }
+      let group: User[] = this.groups[name];
+      if (group === undefined) {
+        this.groups[name] = [];
+        group = this.groups[name];
+      }
 
-        if (group.indexOf(user) !== -1) {
-            // Already in group
-            return;
-        }
+      if (group.indexOf(user) !== -1) {
+        // Already in group
+        return;
+      }
 
-        group.push(user);
-        user.send('assigned', name);
+      group.push(user);
+      user.send('assigned', name);
     }
 
     public unassign(user: User, name: string): void {
-        const group: User[] = this.groups[name];
-        if (group === undefined) {
-            return;
-        }
+      const group: User[] = this.groups[name];
+      if (group === undefined) {
+        return;
+      }
 
-        const position: number = group.indexOf(user);
-        if (position === -1) {
-            // Not in group
-            return;
-        }
+      const position: number = group.indexOf(user);
+      if (position === -1) {
+        // Not in group
+        return;
+      }
 
-        this.groups[name] = group.splice(position, 1);
-        user.send('unassigned', name);
+      this.groups[name] = group.splice(position, 1);
+      user.send('unassigned', name);
     }
 
     public getGroup(name: string): User[] {
-        const group: User[] = this.groups[name];
-        if (group === undefined) {
-            return [];
-        }
+      const group: User[] = this.groups[name];
+      if (group === undefined) {
+        return [];
+      }
 
-        return group;
+      return group;
     }
 
     public send(message: string, filter: Filter, ...args: unknown[]): void {
       // TODO: Move this to server logic
-        let users: User[] = [];
-        if (filter.whitelist === undefined) {
-            filter.whitelist = [];
+      let users: User[] = [];
+      if (filter.whitelist === undefined) {
+        filter.whitelist = [];
+      }
+
+      users = this.filter(filter.whitelist, true);
+
+      if (filter.blacklist === undefined) {
+        filter.blacklist = [];
+      }
+
+      const blacklist: User[] = this.filter(filter.blacklist, false);
+
+      users.forEach((user: User): void => {
+        if (blacklist.indexOf(user) > -1) {
+          return;
         }
-
-        users = this.filter(filter.whitelist, true);
-
-        if (filter.blacklist === undefined) {
-            filter.blacklist = [];
-        }
-
-        const blacklist: User[] = this.filter(filter.blacklist, false);
-
-        users.forEach((user: User): void => {
-            if (blacklist.indexOf(user) > -1) {
-                return;
-            }
-            user.send(message, ...args);
-        });
+        user.send(message, ...args);
+      });
     }
 
     protected handle(event: MessageEvent): void {
-        const message: Message = JSON.parse(event.data);
-        const args: unknown[] = message.data.concat(message);
+      const message: Message = JSON.parse(event.data);
+      const args: unknown[] = message.data.concat(message);
 
-        this.reserved.emit(message.event, ...args);
+      this.reserved.emit(message.event, ...args);
 
-        if (message.sender in this.users) {
-            const user: User = this.users[message.sender];
-            args.push(message);
-            user.emit(message.event, ...args);
-            args.splice(0, 0, user);
-        }
+      if (message.sender in this.users) {
+        const user: User = this.users[message.sender];
+        args.push(message);
+        user.emit(message.event, ...args);
+        args.splice(0, 0, user);
+      }
 
-        if (message.event !== 'joined') {
-          // 'joined' messages are handled in a reserved event
-          this.emit(message.event, ...args);
-        }
+      if (message.event !== 'joined') {
+        // 'joined' messages are handled in a reserved event
+        this.emit(message.event, ...args);
+      }
     }
 
     /**
      * Final stage of connection handshake - sends create message to LipwigCore server
      */
     protected connected(): void {
-        const message: Message = {
-            event: 'create',
-            data: [this.options],
-            sender: '',
-            recipient: []
-        };
-        this.sendMessage(message);
+      const message: Message = {
+        event: 'create',
+        data: [this.options],
+        sender: '',
+        recipient: []
+      };
+      this.sendMessage(message);
     }
 
     private created(id: string): void {
-        this.setID(id); // Also deleted reserved event
-        //this.emit('created', id);
+      this.setID(id); // Also deleted reserved event
+      //this.emit('created', id);
     }
 
     private joined(userID: string, data: DataMap, message: Message): void {
-        const user: User = new User(userID, this);
-        this.users[userID] = user;
-        this.emit('joined', user, data, message);
+      const user: User = new User(userID, this);
+      this.users[userID] = user;
+      this.emit('joined', user, data, message);
     }
 
     private filter(groups: string[], whitelist: boolean): User[] {
-        let filtered: User[] = [];
+      let filtered: User[] = [];
 
-        if (groups.length === 0 && whitelist) {
-            const users: UserMap = this.getUsers();
-            const userIDs: string[] = Object.keys(users);
-            userIDs.forEach((id: string): void => {
-                filtered.push(users[id]);
-            });
-
-            return filtered;
-        }
-
-        groups.forEach((name: string): void => {
-            filtered = filtered.concat(this.getGroup(name));
-        });
-
-        filtered = filtered.filter((user: User, index: number, users: User[]): boolean => {
-            return users.indexOf(user) === index;
+      if (groups.length === 0 && whitelist) {
+        const users: UserMap = this.getUsers();
+        const userIDs: string[] = Object.keys(users);
+        userIDs.forEach((id: string): void => {
+          filtered.push(users[id]);
         });
 
         return filtered;
+      }
+
+      groups.forEach((name: string): void => {
+        filtered = filtered.concat(this.getGroup(name));
+      });
+
+      filtered = filtered.filter((user: User, index: number, users: User[]): boolean => {
+        return users.indexOf(user) === index;
+      });
+
+      return filtered;
     }
 }

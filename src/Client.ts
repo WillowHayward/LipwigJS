@@ -15,10 +15,10 @@ export class Client extends SocketUser {
      * @param data  Data to pass to room host on connection
      */
     constructor(url: string, code: string, data: DataMap = {}) {
-        super(url);
-        this.reserved.on('joined', this.setID, {object: this});
-        this.code = code;
-        this.data = data;
+      super(url);
+      this.reserved.on('joined', this.setID, {object: this});
+      this.code = code;
+      this.data = data;
     }
 
     /**
@@ -27,26 +27,26 @@ export class Client extends SocketUser {
      * @param args  Arguments to send
      */
     public send(event: string, ...args: unknown[]): void { 
-        const message: Message = {
-            event: event,
-            data: args,
-            sender: this.id,
-            recipient: []
-        };
-        this.sendMessage(message);
+      const message: Message = {
+        event: event,
+        data: args,
+        sender: this.id,
+        recipient: []
+      };
+      this.sendMessage(message);
     }
 
     /**
      * Final stage of connection handshake - sends join message to LipwigCore server
      */
     protected connected(): void {
-        const message: Message = {
-            event: 'join',
-            data: [this.code, this.data],
-            sender: '',
-            recipient: []
-        };
-        this.sendMessage(message);
+      const message: Message = {
+        event: 'join',
+        data: [this.code, this.data],
+        sender: '',
+        recipient: []
+      };
+      this.sendMessage(message);
     }
 
     /**
@@ -54,10 +54,10 @@ export class Client extends SocketUser {
      * @param event 
      */
     protected handle(event: MessageEvent): void {
-        const message: Message = JSON.parse(event.data);
-        const args: unknown[] = message.data.concat(message);
+      const message: Message = JSON.parse(event.data);
+      const args: unknown[] = message.data.concat(message);
 
-        this.reserved.emit(message.event, ...args);
-        this.emit(message.event, ...args);
+      this.reserved.emit(message.event, ...args);
+      this.emit(message.event, ...args);
     }
 }

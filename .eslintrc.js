@@ -13,5 +13,8 @@ module.exports = {
     ecmaFeatures: {
         modules: true
     }
+  },
+  rules: {
+     'indent': ['error', 2]
   }
 };
