@@ -1,5 +1,7 @@
 {
     "compilerOptions": {
+        "declaration": true,
+        "strict": true,
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,

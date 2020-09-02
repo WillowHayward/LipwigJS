@@ -21,7 +21,8 @@ module.exports = function(grunt) {
             tsc: './node_modules/typescript/bin/tsc',
             webpack: './node_modules/.bin/webpack',
             karma: './node_modules/karma/bin/karma start karma.conf.js',
-            lint: 'yarn eslint . --ext .ts'
+            lint: 'yarn eslint . --ext .ts',
+            bundle: './node_modules/dts-bundle-generator/dist/bin/dts-bundle-generator.js -o ./dist/index.d.ts ./src/Lipwig.ts'
         },
         clean: {
             build: ['build', 'lipwig.db.tmp'],

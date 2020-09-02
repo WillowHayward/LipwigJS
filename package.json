@@ -2,9 +2,11 @@
   "name": "lipwigjs",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/lipwig.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "grunt"
+    "build": "grunt",
+    "prepare": "tsc"
   },
   "keywords": [],
   "author": "William Hayward <WillHayCode@gmail.com> (https://WillHayCode.com)",
@@ -13,6 +15,7 @@
     "@typescript-eslint/eslint-plugin": "3.10.1",
     "@typescript-eslint/parser": "3.10.1",
     "chai": "4.2.0",
+    "dts-bundle-generator": "^5.4.0",
     "eslint": "7.7.0",
     "grunt": "1.3.0",
     "grunt-contrib-clean": "1.1.0",
