@@ -1,7 +1,7 @@
 {
   "name": "lipwigjs",
-  "version": "1.2.0",
-  "description": "",
+  "version": "1.2.1",
+  "description": "A browser API for use with a Lipwig server",
   "main": "lib/Lipwig.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -40,5 +40,19 @@
   },
   "dependencies": {
     "lipwig-events": "0.0.4"
-  }
+  },
+  "directories": {
+    "doc": "docs",
+    "example": "example",
+    "lib": "lib",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WillHayCode/LipwigJS.git"
+  },
+  "bugs": {
+    "url": "https://github.com/WillHayCode/LipwigJS/issues"
+  },
+  "homepage": "https://github.com/WillHayCode/LipwigJS#readme"
 }
