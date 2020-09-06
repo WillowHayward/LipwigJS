@@ -20,7 +20,7 @@ module.exports = function(grunt) {
             }
         },
         exec: {
-            lint: 'yarn eslint . --ext .ts',
+            lint: 'yarn eslint . --ext .ts --fix',
             bundle: './node_modules/dts-bundle-generator/dist/bin/dts-bundle-generator.js -o ./lib/index.d.ts ./src/Lipwig.ts'
         },
         clean: {
