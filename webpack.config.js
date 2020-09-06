@@ -1,6 +1,6 @@
 const config = {
     entry: {
-      lipwig: './build/Lipwig.js'
+      lipwig: './lib/Lipwig.js'
     },
     output: {
       libraryTarget: 'window',
