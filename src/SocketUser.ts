@@ -17,7 +17,6 @@ export abstract class SocketUser extends EventManager {
       this.reserved = new EventManager();
       this.reserved.on('ping', this.pong, this);
 
-      //const cleanUrl: string = url.replace(/https?:\/\//, 'ws://');
       this.socket = new WebSocket(url);
       this.retry = false;
       //TODO: Make this an option on creation

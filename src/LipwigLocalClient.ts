@@ -24,19 +24,11 @@ export class LipwigLocalClient extends EventManager {
   }
 
   public send(event: string, ...args: unknown[]): void {
-    /*const message: Message = {
-      event: event,
-      data: args,
-      sender: this.id,
-      recipient: []
-    };*/
     this.parent.emit(event, this.user, ...args);
   }
 
   public handle(message: Message): void {
     // In theory this should never be from a socket
-    //const message: Message = JSON.parse(event.data);
-    console.log(message);
     const args: unknown[] = message.data.concat(message);
 
     this.reserved.emit(message.event, ...args);

@@ -135,10 +135,6 @@ export class LipwigHost extends SocketUser {
       localUser.client = localClient;
 
       this.users[localID] = localUser;
-      
-      /*if (data.localCallback !== undefined) {
-        localClient.on('joined', data.localCallback, { object: localClient });
-      };*/
 
       // Set timeout to allow moment for listeners to be set on both ends
       // Hopefully this doesn't introduce a race condition
@@ -164,7 +160,6 @@ export class LipwigHost extends SocketUser {
       }
 
       if (message.event !== 'joined') {
-        // 'joined' messages are handled in a reserved event
         this.emit(message.event, ...args);
       }
     }
@@ -184,7 +179,6 @@ export class LipwigHost extends SocketUser {
 
     private created(id: string): void {
       this.setID(id); // Also deleted reserved event
-      //this.emit('created', id);
     }
 
     private joined(userID: string, data: DataMap, message: Message): void {
