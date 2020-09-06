@@ -4,6 +4,7 @@
 import { SocketUser } from './SocketUser';
 import { Message, DataMap } from './Types';
 import { User } from './User';
+import { LipwigLocalClient } from './LipwigLocalClient';
 
 type UserMap = {
     [index: string]: User;
@@ -118,6 +119,35 @@ export class LipwigHost extends SocketUser {
         }
         user.send(message, ...args);
       });
+    }
+
+    public createLocalClient(data: DataMap = {}): LipwigLocalClient {
+      let localCount = 1;
+      let localID: string;
+      do {
+        localID = this.id + '-local' + localCount;
+        localCount++;
+      } while (this.users[localID] !== undefined);
+
+      const localUser = new User(localID, this, true);
+      const localClient = new LipwigLocalClient(this, localUser, data);
+
+      localUser.client = localClient;
+
+      this.users[localID] = localUser;
+      
+      /*if (data.localCallback !== undefined) {
+        localClient.on('joined', data.localCallback, { object: localClient });
+      };*/
+
+      // Set timeout to allow moment for listeners to be set on both ends
+      // Hopefully this doesn't introduce a race condition
+      setTimeout(() => {
+        this.emit('joined', localUser, data);
+        localUser.emit('joined', localID);
+      }, 1);
+
+      return localClient;
     }
 
     protected handle(event: MessageEvent): void {

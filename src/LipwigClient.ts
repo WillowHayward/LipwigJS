@@ -53,7 +53,7 @@ export class LipwigClient extends SocketUser {
      * Handle received message
      * @param event 
      */
-    protected handle(event: MessageEvent): void {
+    public handle(event: MessageEvent): void {
       const message: Message = JSON.parse(event.data);
       const args: unknown[] = message.data.concat(message);
 
