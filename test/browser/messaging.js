@@ -1,5 +1,4 @@
 describe('Messaging', function () {
-    
     it('should allow for rooms to be created', function(done) {
         const host = new LipwigHost(url);
         host.on('created', function() {
@@ -28,6 +27,23 @@ describe('Messaging', function () {
 
         host.on('joined', function(user) {
             user.send('done');
+        });
+    });
+
+    it('should allow for once messages to only trigger once', function(done) {
+        const host = new LipwigHost(url);
+        let mainUser;
+        host.on('created', function(code) {
+            const client = new LipwigClient(url, code);
+            client.on('once', function() {
+              done()
+              mainUser.send('once');
+            });
+        });
+
+        host.on('joined', function(user) {
+            mainUser = user;
+            user.send('once');
         });
     });
 

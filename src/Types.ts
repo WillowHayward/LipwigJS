@@ -13,6 +13,6 @@ export type DataMap = {
 };
 
 export const DEFAULTS = {
-  port: 8080
+  port: 8989
 };
 

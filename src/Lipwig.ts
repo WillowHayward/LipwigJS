@@ -4,8 +4,14 @@
  */
 import { LipwigClient } from './LipwigClient';
 import { LipwigHost } from './LipwigHost';
+import { User } from './User';
+import { LipwigLocalClient } from './LipwigLocalClient';
+import { SocketUser } from './SocketUser';
 
 export {
   LipwigClient,
-  LipwigHost
+  LipwigHost,
+  User,
+  LipwigLocalClient,
+  SocketUser
 }
