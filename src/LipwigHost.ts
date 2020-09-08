@@ -121,7 +121,8 @@ export class LipwigHost extends SocketUser {
       });
     }
 
-    public createLocalClient(data: DataMap = {}): LipwigLocalClient {
+    public createLocalClient(data: DataMap = {}, callback: (id: string) => void = 
+    ()=> null): LipwigLocalClient {
       let localCount = 1;
       let localID: string;
       do {
@@ -136,12 +137,19 @@ export class LipwigHost extends SocketUser {
 
       this.users[localID] = localUser;
 
+      localClient.on('joined', callback); // Context?
+      /*localClient.emit('joined', localID);
+      this.emit('joined', localUser, data);*/
+
       // Set timeout to allow moment for listeners to be set on both ends
       // Hopefully this doesn't introduce a race condition
+      // TODO: Looks like this introduced a race condition. 
+      //       Not a massive surprise I guess.
+      // TODO: Add callback as parameter
       setTimeout(() => {
         this.emit('joined', localUser, data);
         localUser.emit('joined', localID);
-      }, 1);
+      }, 10);
 
       return localClient;
     }

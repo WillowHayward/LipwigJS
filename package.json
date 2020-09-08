@@ -1,6 +1,6 @@
 {
   "name": "lipwigjs",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "A browser API for use with a Lipwig server",
   "main": "lib/Lipwig.js",
   "types": "lib/index.d.ts",
