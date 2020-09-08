@@ -134,10 +134,11 @@ export class LipwigHost extends SocketUser {
       const localClient = new LipwigLocalClient(this, localUser, data);
 
       localUser.client = localClient;
+      localClient.id = localID;
 
       this.users[localID] = localUser;
 
-      localClient.on('joined', callback); // Context?
+      localClient.on('joined', callback, { object: localClient }); // Context?
       /*localClient.emit('joined', localID);
       this.emit('joined', localUser, data);*/
 
@@ -148,7 +149,7 @@ export class LipwigHost extends SocketUser {
       // TODO: Add callback as parameter
       setTimeout(() => {
         this.emit('joined', localUser, data);
-        localUser.emit('joined', localID);
+        localClient.emit('joined', localID);
       }, 10);
 
       return localClient;
